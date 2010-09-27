@@ -16,6 +16,10 @@
 #include "win_dig.h"
 #endif
 
+#ifdef _SDL
+#include <SDL.h>
+#endif
+
 struct scdat
 {
   Sint5 score,nextbs;
@@ -335,35 +339,48 @@ void flashywait(Sint4 n)
 
 Sint4 getinitial(Sint4 x,Sint4 y)
 {
-  Sint4 i;
-  gwrite(x,y,'_',3);
-  do {
-
-#ifdef _WINDOWS
-    do_windows_events();
-#endif
-
-    for (i=0;i<40;i++) {
-      if (kbhit())
-        return getkey();
-#ifdef _WINDOWS
-      flashywait(5);
+	Sint4 ch = 'A';
+	bool blink = FALSE;
+	for(;;)
+	{
+		if(blink)
+			gwrite(x,y,ch,3);
+		else
+			gwrite(x,y,' ',3);
+		Sint4 i;
+		int p = blink ? 20 : 10;
+		for(i = 0;i < p; ++i)
+		{
+			if(kbhit())
+			{
+#ifndef _SDL
+				return getkey();
 #else
-      flashywait(15);
+				switch(getkey())
+				{
+				case SDLK_LEFT:
+					if(ch > 'A')
+						--ch;
+					else
+						ch = 'Z';
+					blink = false;
+					break;
+				case SDLK_RIGHT:
+					if(ch < 'Z')
+						++ch;
+					else
+						ch = 'A';
+					blink = false;
+					break;
+				case SDLK_LCTRL:
+					return ch;
+				}
 #endif
-    }
-    for (i=0;i<40;i++) {
-      if (kbhit()) {
-        gwrite(x,y,'_',3);
-        return getkey();
-      }
-#ifdef _WINDOWS
-      flashywait(5);
-#else
-      flashywait(15);
-#endif
-    }
-  } while (1);
+			}
+			flashywait(5);
+		}
+		blink = !blink;
+	}
 }
 
 void shufflehigh(void)
