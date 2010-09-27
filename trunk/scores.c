@@ -363,14 +363,14 @@ Sint4 getinitial(Sint4 x,Sint4 y)
 						--ch;
 					else
 						ch = 'Z';
-					blink = false;
+					blink = FALSE;
 					break;
 				case SDLK_RIGHT:
 					if(ch < 'Z')
 						++ch;
 					else
 						ch = 'A';
-					blink = false;
+					blink = FALSE;
 					break;
 				case SDLK_LCTRL:
 					return ch;
