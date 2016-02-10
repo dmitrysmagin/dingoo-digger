@@ -5,7 +5,7 @@ LD        = mipsel-linux-ld
 PROJECT_NAME = digger
 
 SRC_PATH = ../..
-OBJ_BASE = Release
+OBJ_BASE = ../../Release
 DIST_PATH = $(OBJ_BASE)
 OBJ_PATH = $(OBJ_BASE)
 RES_PATH = res
